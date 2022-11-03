@@ -8,7 +8,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tiny app listening on port ${PORT}!`);
 });
 
 ///////////////////  to make submited URL readable ////////////////////////////
@@ -23,7 +23,7 @@ const generateRandomString = function () {
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
-// for creat a new URL
+// for creat a new short URL
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -46,10 +46,16 @@ app.post("/urls", (req, res) => {
   urlDatabase[newId] = longURL;
   res.redirect(`/urls/${newId}`);
 });
-// send the new pair URLs to urlDatabase
+// send the new pair URLs to urlDatabase list page
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[id] = longURL;
+  res.redirect('/urls/');
+});
+// deleting the pairs of URLs from urlDatabase
+app.post("/urls/:id/delete",(req, res) => {
+  const id = req.params.id;
+  delete urlDatabase[id]; 
   res.redirect('/urls/');
 });
