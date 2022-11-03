@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /////////////////////////////////  Functions //////////////////////////////////
 const generateRandomString = function () {
-  return Math.random().toString(36).slice(2, 7);
+  return Math.random().toString(36).slice(2, 8);
 };
 /////////////////////////////////  App Routes /////////////////////////////////
 //  Homepage
@@ -26,12 +26,6 @@ app.get("/", (req, res) => {
 // for creat a new short URL
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
-});
-// redirect to the existed URL
-app.get("/urls/:id", (req, res) => {
-  const id = req.params.id;
-  const longURL = urlDatabase[id]
-  res.redirect(longURL);
 });
 // listing existing URL in database as a table
 app.get("/urls", (req, res) => {
@@ -46,16 +40,39 @@ app.post("/urls", (req, res) => {
   urlDatabase[newId] = longURL;
   res.redirect(`/urls/${newId}`);
 });
-// send the new pair URLs to urlDatabase list page
+
+// redirect to the existed URL
+app.get("/urls/:id", (req, res) => {
+  const id = req.params.id;
+  const longURL = urlDatabase[id]
+  res.redirect(longURL);
+});
+// Send the new pair URLs to urlDatabase list page
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
   urlDatabase[id] = longURL;
   res.redirect('/urls/');
 });
-// deleting the pairs of URLs from urlDatabase
+// Editing the pairs of URLs from urlDatabase
+app.post("/urls/:id/",(req, res) => {
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[id] = longURL;
+  res.redirect('/urls/');
+});
+app.get('/urls/:id/edit', (req, res) => {
+  const id = req.params.id;
+  const templateVars = {
+    id: id, 
+    longURL: urlDatabase[id]
+  }
+  res.render ('urls_show', templateVars);
+});
+// Deleting the pairs of URLs from urlDatabase
 app.post("/urls/:id/delete",(req, res) => {
   const id = req.params.id;
   delete urlDatabase[id]; 
   res.redirect('/urls/');
 });
+
