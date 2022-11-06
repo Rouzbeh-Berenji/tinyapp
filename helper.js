@@ -9,7 +9,6 @@ const checkIfUserExists =(users, email) =>{
   return false;
 };
 
-
 const findUser =(users, email, password) =>{
   for (let id in users) {
     if (users[id].email === email) {
